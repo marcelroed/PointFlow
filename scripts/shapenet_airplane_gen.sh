@@ -13,7 +13,7 @@ ds=shapenet15k
 log_name="gen/${ds}-cate${cate}"
 data_dir="data/ShapeNetCore.v2.PC15k"
 
-python train.py \
+echo train.py \
     --log_name ${log_name} \
     --lr ${lr} \
     --dataset_type ${ds} \
