@@ -1,5 +1,7 @@
 import sys
 import os
+
+import imageio
 import torch
 import torch.distributed as dist
 import torch.nn as nn
@@ -201,7 +203,7 @@ def main_worker(gpu, save_dir, ngpus_per_node, args):
                                              pert_order=train_loader.dataset.display_axis_order)
                 results.append(res)
             res = np.concatenate(results, axis=1)
-            scipy.misc.imsave(os.path.join(save_dir, 'images', 'tr_vis_conditioned_epoch%d-gpu%s.png' % (epoch, args.gpu)),
+            imageio.imwrite(os.path.join(save_dir, 'images', 'tr_vis_conditioned_epoch%d-gpu%s.png' % (epoch, args.gpu)),
                               res.transpose((1, 2, 0)))
             if writer is not None:
                 writer.add_image('tr_vis/conditioned', torch.as_tensor(res), epoch)
