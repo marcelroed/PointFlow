@@ -14,6 +14,7 @@ class SequentialFlow(nn.Module):
         self.chain = nn.ModuleList(layer_list)
 
     def forward(self, x, context, logpx=None, reverse=False, inds=None, integration_times=None):
+        print(f'[FROM CNF] {x.shape=}')
         if inds is None:
             if reverse:
                 inds = range(len(self.chain) - 1, -1, -1)
@@ -53,6 +54,7 @@ class CNF(nn.Module):
         self.conditional = conditional
 
     def forward(self, x, context=None, logpx=None, integration_times=None, reverse=False):
+        print(f'[FROM CNF] {x.shape=}')
         if logpx is None:
             _logpx = torch.zeros(*x.shape[:-1], 1).to(x)
         else:
@@ -61,12 +63,16 @@ class CNF(nn.Module):
         if self.conditional:
             assert context is not None
             states = (x, _logpx, context)
-            atol = [self.atol] * 3
-            rtol = [self.rtol] * 3
+            # atol = [self.atol] * 3
+            # rtol = [self.rtol] * 3
+            atol = self.atol
+            rtol = self.rtol
         else:
             states = (x, _logpx)
-            atol = [self.atol] * 2
-            rtol = [self.rtol] * 2
+            # atol = [self.atol] * 2
+            # rtol = [self.rtol] * 2
+            atol = self.atol
+            rtol = self.rtol
 
         if integration_times is None:
             if self.train_T:
